@@ -64,6 +64,17 @@ Instructions:
 
     Your code goes here!
      */
-    // getJSON('../data/earth-like-results.json')
+    getJSON('../data/earth-like-results.json')
+      .then(JSONresponse => {
+        addSearchHeader(JSONresponse.query);
+        return getJSON(JSONresponse.results[0]);
+      })
+      .then(planetData => {
+        createPlanetThumb(planetData); // All this 'then' can be replaced by ".then(createPlanetThumb)" and will work perfectly passing the returning object from the Promise as parameter to the mentioned function.
+      })
+      .catch(err => {
+        addSearchHeader('unknow');
+        console.log(err);
+      });
   });
 })(document);
