@@ -31,6 +31,8 @@ proper order even if all the requests haven't finished.
       pT[d] = data[d];
     }
     home.appendChild(pT);
+    // For testing porpuses
+    console.log('rendered: ' + data.pl_name);
   }
 
   /**
@@ -49,6 +51,19 @@ proper order even if all the requests haven't finished.
    */
   function getJSON(url) {
     return get(url).then(function(response) {
+      // For testing porpuses
+      /* if (url === 'data/planets/Kepler-186f.json') {
+        return new Promise(function(resolve) {
+          setTimeout(function() {
+            console.log('received: ' + url);
+            resolve(response.json());
+          }, 500);
+        });
+      } else {
+        console.log('received: ' + url);
+        return response.json();
+      } */
+      console.log('received: ' + url);
       return response.json();
     });
   }
@@ -58,6 +73,19 @@ proper order even if all the requests haven't finished.
     /*
     Your code goes here!
      */
-    // getJSON('../data/earth-like-results.json')
+    getJSON('../data/earth-like-results.json')
+      .then(function(response) {
+        addSearchHeader(response.query);
+
+        var sequence = Promise.resolve();
+
+        response.results.map(function(result) {
+          var request = getJSON(result);
+
+          sequence = sequence.then(function() {
+            return request.then(createPlanetThumb);
+          });
+        });
+    });
   });
 })(document);
