@@ -64,8 +64,21 @@ Instructions:
      */
     getJSON('../data/earth-like-results.json')
     .then(function(response) {
+      var sequence = Promise.resolve();
+
       response.results.forEach(function(url) {
-        getJSON(url).then(createPlanetThumb);
+        // Option 1: In Parallel (My initial / incorrect solution) PROBLEM: It won't respect the ORDER if one url takes longer to respond than the next one.
+        /* sequence = sequence.then(() => {
+          getJSON(url).then(createPlanetThumb);
+        }); */
+        // Option 2: In Series (The correct solution)
+        sequence = sequence.then(() => {
+          return getJSON(url);
+        }).then(createPlanetThumb);
+        // Option 3: In Parallel. (Another Parallel incorrect solution) PROBLEM: It won't respect the ORDER if one url takes longer to respond than the next one.
+        /* sequence.then(() => {
+          return getJSON(url);
+        }).then(createPlanetThumb); */
       });
     });
   });
