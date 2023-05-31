@@ -35,6 +35,21 @@ Instructions:
 
     Your code goes here!
      */
+
+    // My first attempt (worked, but not correct)
+    /*
+    return fetch(url, {
+      method: 'get'
+    }).then(function(response) {
+      return response;
+    }).catch(function(err) {
+      return Error(err);
+    });
+    */
+
+    return fetch(url, {
+      method: 'get' // Optional: Not method = get
+    });
   }
 
   /**
@@ -48,6 +63,24 @@ Instructions:
 
     Your code goes here!
      */
+
+    // My first attempt (worked, but not correct)
+    /*
+    return new Promise((resolve, reject) => {
+      get(url)
+        .then(response => {
+          resolve(response.json());
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+    */
+
+    return get(url)
+      .then(response => {
+        return response.json();
+      });
   }
 
   window.addEventListener('WebComponentsReady', function() {
@@ -58,6 +91,14 @@ Instructions:
 
     Your code goes here too!
      */
-    // getJSON('../data/earth-like-results.json')
+    getJSON('../data/earth-like-results.json')
+      .then(JSONresponse => {
+        console.log(JSONresponse);
+        addSearchHeader(JSONresponse.query);
+      })
+      .catch(err => {
+        console.log(err);
+        addSearchHeader('unknow');
+      });
   });
 })(document);
